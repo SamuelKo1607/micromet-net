@@ -1,6 +1,8 @@
 name: micromet-net
 channels:
   - defaults
+  - conda-forge
+  - bioconda
 dependencies:
   - python=3.10
   - tensorflow-base=2.10
@@ -12,4 +14,5 @@ dependencies:
   - sunpy-soar=1.8
   - scipy=1.11
   - cdflib=1.2
+  - snakemake
 prefix: C:\Users\skoci\anaconda3\envs\micromet-net
