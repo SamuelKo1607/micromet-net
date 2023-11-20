@@ -1,0 +1,7 @@
+name: micromet-net
+channels:
+  - defaults
+dependencies:
+  - tensorflow-base
+  - python=3.11
+prefix: /Users/akv020/miniconda3/envs/micromet-net
