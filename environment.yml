@@ -2,7 +2,9 @@ name: micromet-net
 channels:
   - defaults
 dependencies:
-  - tensorflow-base
-  - python=3.11
-  - spyder
-prefix: /Users/akv020/miniconda3/envs/micromet-net
+  - python=3.10
+  - tensorflow-base=2.10.0
+  - spyder=5.4.3
+  - numpy=1.26.0
+  - matplotlib=3.8.0
+prefix: C:\Users\skoci\anaconda3\envs\micromet-net
