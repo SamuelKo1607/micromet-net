@@ -4,7 +4,7 @@ from classify import is_dust_dummy
 
 
 def main(input_cdf,
-         output_flags_file):
+         output_cnn_flags):
     """
     The main wrapper funcrtion to load a cdf, preporcess, analyze and 
     save the resulting CNN flag and other mtedadata in a new file.
@@ -22,7 +22,9 @@ def main(input_cdf,
 
     """
     print(input_cdf)
-    print(output_flags_file)
+    print(output_cnn_flags)
+
+    ch1, ch2, ch3 = np.zeros(10),np.zeros(10),np.zeros(10)
 
     is_dust = is_dust_dummy(ch1,ch2,ch3)
 

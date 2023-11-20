@@ -3,8 +3,13 @@ channels:
   - defaults
 dependencies:
   - python=3.10
-  - tensorflow-base=2.10.0
-  - spyder=5.4.3
-  - numpy=1.26.0
-  - matplotlib=3.8.0
+  - tensorflow-base=2.10
+  - spyder=5.4
+  - numpy=1.26
+  - matplotlib=3.8
+  - astropy=5.3
+  - sunpy=5.0
+  - sunpy-soar=1.8
+  - scipy=1.11
+  - cdflib=1.2
 prefix: C:\Users\skoci\anaconda3\envs\micromet-net
