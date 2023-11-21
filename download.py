@@ -111,9 +111,9 @@ def main(YYYYMMDD_from,
 
     Parameters
     ----------
-    YYYYMMDD_from : str / int
+    YYYYMMDD_from : str  or int
         Date from (inclusive).
-    YYYYMMDD_to : str / int
+    YYYYMMDD_to : str or int
         Date to (inclusive).
 
     Returns
