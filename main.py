@@ -3,8 +3,9 @@ import sys
 import cdflib
 
 from conversions import tt2000_to_date
-from classify import is_dust_dummy
+from classify import is_dust_dummy as is_dust
 from scipy import signal
+from scipy import interpolate
 
 
 def pad(wf,where_to_start=None):
@@ -25,7 +26,7 @@ def pad(wf,where_to_start=None):
         The padded array.
     """
 
-    if where_to_start is None:
+    if where_to_start is None or where_to_start>len(wf)//2:
         where_to_start = len(wf)//2
     
     #noise background
@@ -49,7 +50,10 @@ def pad(wf,where_to_start=None):
     return wf_padded
 
 
-def subsample(wf,samples=4096):
+def subsample(wf,
+              samples=4096,
+              style="interpolate",
+              denoise=7):
     """
     A wrapper to do the right subsampling that fits our needs.
 
@@ -59,15 +63,49 @@ def subsample(wf,samples=4096):
         The signal to be subsampled.
     samples : int, optional
         The target number of samples. The default is 4096.
+    style : str, optional
+        The algorithm to be used to subsample the data.
+        The valid options are: "interpolate", "fourier", and "decimate". 
+        The default is "interpolate".
+        They are comparably fast, but the "interpolate" maintains the noise
+        level, while the other two supress the noise even without additional 
+        filtering. Beware that the "fourier" method adds jittery 
+        start and end, so it is advisable to cut a small margin if used. 
+    denoise : int, optional
+        Adds a median filter of this length before subsampling. The number, 
+        if not 0, is rounded up to the next odd integer, not smaller than 3.
+        The default is 7.
 
     Returns
     -------
-    resampled
+    subsampled
         The subsampled signal.
 
     """
-    resampled = signal.resample(wf,samples)
-    return resampled
+    if denoise:
+        round_up_odd = lambda x : max([x-x%2+1,3])
+        wf = signal.medfilt(wf, round_up_odd(denoise))
+    else:
+        pass
+
+    if style == "fourier":
+        subsampled = signal.resample(wf,samples)
+    elif style == "decimate":
+        q = len(wf)//samples
+        subsampled = signal.decimate(wf,q,ftype="fir")
+        if len(subsampled) != samples:
+            subsampled = subsample(subsampled,samples=samples,
+                                   style="interpolate",
+                                   denoise=0)
+    elif style == "interpolate":
+        times_original = np.arange(0,1,1/len(wf))
+        times_subsampled = np.arange(0,1,1/samples)
+        interpolated = interpolate.interp1d(times_original, wf-np.median(wf),
+                                            kind='linear')
+        subsampled = interpolated(times_subsampled)
+    else:
+        raise Exception(f"unknown subsampling style: {style}")
+    return subsampled
 
 
 def preprocess(cdf,i):
@@ -111,7 +149,6 @@ def preprocess(cdf,i):
     is_xld1 = min(channel_ref == [13, 21, 20])
     is_se1  = min(channel_ref == [10, 20, 30])
 
-
     fail_reasons = []
     if sw<211:
         fail_reasons.append("sw < 211")
@@ -122,7 +159,6 @@ def preprocess(cdf,i):
     if len(fail_reasons):
         raise Exception(fail_reasons)
 
-
     if is_xld1:
         ch1 = e[2,:]-e[1,:]
         ch2 = e[2,:]
@@ -131,14 +167,31 @@ def preprocess(cdf,i):
         ch1 = e[0,:]
         ch2 = e[1,:]
         ch3 = e[2,:]
+    else:
+        raise Exception("unexpected: neither SE1 nor XLD1")
 
+    #pad the high frequency data
+    if is_hi_sampling:
+        # The seed is set as the date, file version,
+        # and the index to ensure reproducibility.
+        np.random.seed(int( str(cdf.file)[-16:-8] #date
+                           +str(cdf.file)[-6:-4]  #file version
+                           +str(i)))              #event index
+        start = np.random.randint(len(ch1))
+        ch1 = pad(ch1,start)
+        ch2 = pad(ch2,start)
+        ch3 = pad(ch3,start)
+    elif is_lo_sampling:
+        pass
+    else:
+        raise Exception("unexpected: neither hi_sampling nor lo_sampling")
 
+    #remove offset
+    ch1 -= np.median(ch1)
+    ch2 -= np.median(ch2)
+    ch3 -= np.median(ch3)
 
-    # TBD treatment
-
-
-
-    #subsample (compress)
+    #filter (medfilt) and subsample (compress)
     ch1 = subsample(ch1)
     ch2 = subsample(ch2)
     ch3 = subsample(ch3)
@@ -185,7 +238,7 @@ def main(input_cdf,
             print(e)
             cnn_flag = np.nan
         else:
-            cnn_flag = is_dust_dummy(ch1,ch2,ch3)
+            cnn_flag = is_dust(ch1,ch2,ch3)
 
         print(cnn_flag)
 
