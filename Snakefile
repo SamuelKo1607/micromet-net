@@ -16,7 +16,6 @@ rule all:
         "environment.yml"
     shell:
         """
-        python aggregate.py
         """
 
 # Define the rule to do the classification job of each of the files
