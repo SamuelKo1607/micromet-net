@@ -242,10 +242,9 @@ def preprocess(cdf,i,
 
 def write_cnn_flags_file(events,
                          cnn_flags,
-                         name,
-                         location=cnn_flags_location):
+                         name):
     """
-    The function that writes 
+    The function that writes the CNN classified flags.
 
     Parameters
     ----------
@@ -257,9 +256,6 @@ def write_cnn_flags_file(events,
     name : str
         The name of the file to be written. Usually the name of the 
         underlying cdf file without the ".cdf".
-    location : str, optional
-        Path to the directorry where the file will be written. 
-        The default is cnn_flags_location from "paths.py".
 
     Returns
     -------
@@ -267,7 +263,7 @@ def write_cnn_flags_file(events,
         The location of the file that was just written.
 
     """
-    filepath = os.path.join(location,name)
+    filepath = os.path.join(name)
 
     with open(filepath,"w") as file:
         file.write("index,cnn_flag\n")
