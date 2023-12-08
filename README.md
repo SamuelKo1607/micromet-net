@@ -13,5 +13,5 @@ A tool for analyzing Solar Orbiter / RPW electrical waveforms and classifing the
 # User manual:
 1. Edit the paths and the days of interest in const.py to your liking.
 2. Use Snakemake to run all the steps that are needed:
-	1. Download the .csv data for further processing. May be ommitted if the data is present already. Call `snakemake -j 1 -R download`.
+	1. Download the .csv data for further processing. May be skipped if the data is present already. Call `snakemake -j 1 -R download`.
 	2. Analyze the .csv data and produce the classification files. Call `snakemake -j 8 -R analyze`. The `8` stand for the number of parallel tasks. There is no point in making this number bigger than the core count of your system and perhaps you may want to use even fewer.
