@@ -6,7 +6,9 @@ from sunpy.net import Fido
 import sunpy.net.attrs as a
 
 from conversions import YYYYMMDD2date
-from paths import cdf_tswf_e_location
+from const import CDF_TSWF_E_LOCATION
+from const import YYYYMMDD_MIN
+from const import YYYYMMDD_MAX
 
 
 
@@ -69,7 +71,7 @@ def soar_download(dt_from,
 def download_update_cdf(start_date,
                         end_date,
                         data_products=["rpw-tds-surv-tswf-e"],
-                        data_directories=[cdf_tswf_e_location]):
+                        data_directories=[CDF_TSWF_E_LOCATION]):
     """
     The function to download all the SOAR files 
     that are needed for the dust analysis.
@@ -129,6 +131,4 @@ def main(YYYYMMDD_from,
     
 #%%
 if __name__ == "__main__":
-    YYYYMMDD_from = sys.argv[1]
-    YYYYMMDD_to = sys.argv[2]
-    main(YYYYMMDD_from, YYYYMMDD_to)
+    main(YYYYMMDD_MIN, YYYYMMDD_MAX)
