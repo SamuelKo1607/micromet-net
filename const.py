@@ -1,13 +1,20 @@
 import os
 
+# Paths
+CDF_TSWF_E_LOCATION = os.path.join("data","rpw_tds_surv_tswf_e","")
+PREPROCESSED_LOCATION = os.path.join("data","preprocessed","")
+CNN_FLAGS_LOCATION = os.path.join("data","cnn_flags","")	
 
-cdf_tswf_e_location = os.path.join("data","rpw_tds_surv_tswf_e","")
-preprocessed_location = os.path.join("data","preprocessed","")
-cnn_flags_location = os.path.join("data","cnn_flags","")	
-
+# Constants
+YYYYMMDD_MIN = "20000101"
+YYYYMMDD_MAX = "20200620"
 
 #%%
 if __name__ == "__main__":
-    print(cdf_tswf_e_location)
-    print(preprocessed_location)
-    print(cnn_flags_location)
+    print("Locs:")
+    print(CDF_TSWF_E_LOCATION)
+    print(PREPROCESSED_LOCATION)
+    print(CNN_FLAGS_LOCATION)
+    print("Consts:")
+    print(YYYYMMDD_MIN)
+    print(YYYYMMDD_MAX)

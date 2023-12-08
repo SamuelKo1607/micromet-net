@@ -10,8 +10,7 @@ from classify import is_dust_dummy as is_dust
 from scipy import signal
 from scipy import interpolate
 
-from paths import cnn_flags_location
-from paths import preprocessed_location
+from const import PREPROCESSED_LOCATION
 
 
 def pad(wf,where_to_start=None):
@@ -117,7 +116,7 @@ def subsample(wf,
 
 def preprocess(cdf,i,
                cached=False,
-               cache_folder=preprocessed_location):
+               cache_folder=PREPROCESSED_LOCATION):
     """
     The purpose is to prepare ch1,ch2,ch3 in monopole equivalent and in the
     right format for the CNN classifier "is_dust". 
@@ -135,7 +134,7 @@ def preprocess(cdf,i,
         The default is False.
     cache_folder : str, optional
         The folder where to put the cached results. 
-        The default is preprocessed_location from "paths.py". 
+        The default is PREPROCESSED_LOCATION from "paths.py". 
 
     Returns
     -------
@@ -276,7 +275,7 @@ def write_preprocessed_waveforms_file(ch1,
                                       ch2,
                                       ch3,
                                       name,
-                                      location=preprocessed_location,
+                                      location=PREPROCESSED_LOCATION,
                                       precision=np.half):
     """
     The function to write the chache .csv file 
@@ -297,7 +296,7 @@ def write_preprocessed_waveforms_file(ch1,
         underlying cdf file with the index.
     location : str, optional
         Path to the directorry where the file will be written. 
-        The default is preprocessed_location from "paths.py".
+        The default is PREPROCESSED_LOCATION from "paths.py".
 
     Returns
     -------
